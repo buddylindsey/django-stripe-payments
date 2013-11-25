@@ -480,18 +480,18 @@ class Customer(StripeObject):
         )
     
     def subscribe(self, plan, quantity=1, trial_days=None,
-                  charge_immediately=True):
+                  charge_immediately=True, coupon=None):
         cu = self.stripe_customer
         if trial_days:
             resp = cu.update_subscription(
                 plan=PAYMENTS_PLANS[plan]["stripe_plan_id"],
                 trial_end=timezone.now() + datetime.timedelta(days=trial_days),
-                quantity=quantity
+                quantity=quantity, coupon=coupon
             )
         else:
             resp = cu.update_subscription(
                 plan=PAYMENTS_PLANS[plan]["stripe_plan_id"],
-                quantity=quantity
+                quantity=quantity, coupon=coupon
             )
         self.sync_current_subscription()
         if charge_immediately:
