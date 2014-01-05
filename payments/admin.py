@@ -60,6 +60,11 @@ class CustomerSubscriptionStatusListFilter(admin.SimpleListFilter):
             return queryset.filter(current_subscription__status=self.value())
 
 
+def resend_email(modeladmin, request, queryset):
+    for charge in queryset:
+        charge.send_receipt()
+
+
 admin.site.register(
     Charge,
     list_display=[
@@ -93,6 +98,7 @@ admin.site.register(
         "customer",
         "invoice"
     ],
+    actions=(resend_email,)
 )
 
 admin.site.register(
